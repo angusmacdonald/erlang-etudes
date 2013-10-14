@@ -3,12 +3,17 @@
 %% @version 0.2
 
 -module(geom).
--export([area/3]).
+-export([area/1]).
 
 -spec(area(atom(), number(),number()) -> number()).
 
+%% @doc Calculates the area of a specified shape, given the
+%% type of the shape and the two diemsons of the shape.
+
+area ({Shape, A, B}) -> area(Shape, A, B).
+
 %% @doc Calculates the area of a specified shape (either a 
-%%	rectangle, a triangle, or an ellipse). Checks that both
+%% rectangle, a triangle, or an ellipse). Checks that both
 %% parameters are greater than or equal to zero.
 
 area (rectangle, Length, Width) when Length >=0, Width >=0 
