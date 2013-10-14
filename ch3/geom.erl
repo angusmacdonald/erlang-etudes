@@ -16,4 +16,6 @@ area (rectangle, Length, Width) when Length >=0, Width >=0
 area (triangle, Base, Height) when Base >=0, Height>=0
 	-> (Base * Height) / 2.0;
 area (ellipse, MajorRadius, MinorRadius) when MajorRadius>=0, MinorRadius>=0
-	-> math:pi() * MajorRadius * MinorRadius.
+	-> math:pi() * MajorRadius * MinorRadius;
+area (_,_,_)
+	-> 0.
