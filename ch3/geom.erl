@@ -7,6 +7,13 @@
 
 -spec(area(atom(), number(),number()) -> number()).
 
-area (rectangle, Length, Width) -> Length * Width;
-area (triangle, Base, Height) -> (Base * Height) / 2.0;
-area (ellipse, MajorRadius, MinorRadius) -> math:pi() * MajorRadius * MinorRadius.
+%% @doc Calculates the area of a specified shape (either a 
+%%	rectangle, a triangle, or an ellipse). Checks that both
+%% parameters are greater than or equal to zero.
+
+area (rectangle, Length, Width) when Length >=0, Width >=0 
+	-> Length * Width;
+area (triangle, Base, Height) when Base >=0, Height>=0
+	-> (Base * Height) / 2.0;
+area (ellipse, MajorRadius, MinorRadius) when MajorRadius>=0, MinorRadius>=0
+	-> math:pi() * MajorRadius * MinorRadius.
