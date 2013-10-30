@@ -34,4 +34,3 @@ range(List) ->
 	Max = maximum(List),
 
 	[Min, Max].
-
