@@ -1,5 +1,5 @@
 -module(stats).
--export([minimum/1]).
+-export([minimum/1, maximum/1, range/1]).
 
 minimum(List) ->
 	[First | Remainder] = List,
@@ -14,3 +14,24 @@ minimum(List, SmallestNum) ->
 		true ->
 			minimum(tl(List), SmallestNum)
 	end.
+
+maximum(List) ->
+	[First | Remainder] = List,
+	maximum(Remainder, First).
+
+maximum(List, LargestNum) ->
+	if 
+		List =:= [] ->
+			LargestNum;
+		hd(List) > LargestNum ->
+			maximum(tl(List), hd(List));
+		true ->
+			maximum(tl(List), LargestNum)
+	end.
+
+range(List) ->
+	Min = minimum(List),
+	Max = maximum(List),
+
+	[Min, Max].
+
