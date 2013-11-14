@@ -29,8 +29,4 @@ maximum(List, LargestNum) ->
 			maximum(tl(List), LargestNum)
 	end.
 
-range(List) ->
-	Min = minimum(List),
-	Max = maximum(List),
-
-	[Min, Max].
+range(List) -> [minimum(List), maximum(List)].
