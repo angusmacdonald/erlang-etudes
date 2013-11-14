@@ -115,4 +115,12 @@ Not always clear how things should be broken up into processes.
 
 You could have 2 player processes in the same, an extra for a dealer, or extra processes for the war or battlefield, or even for the deck. If the deck was the process, you could have checks for sending cards you don't have, or where a player isn't quick enough.
 
+#### Linking of Processes
 
+When you spawn a process you can *link* or *spawn link*. You usually want to do the latter to say that the lifetime of the created process matters to your lifetime.
+
+You can get signals back from this when the spawned process fails, and you can trap this or let it exit the creating process. If the creator dies, the created process will die too.
+
+You almost never want to just call one, because it means that one can exit and not affect the other (even if they are really linked).
+
+A *monitor* is less extreme, and sends a message rather than a trap. It's good for observing, but not for being directly affected.
