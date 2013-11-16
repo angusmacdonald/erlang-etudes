@@ -1,24 +1,4 @@
 -module(cards).
-<<<<<<< HEAD
--export([make_deck/0, show_deck/0, shuffle/1]).
-
-make_deck() ->
-	Suites = ["Clubs", "Diamonds", "Hearts", "Spades"],
-	Nums = ["A", "K", "Q", "J" , "10", "9", "8", "7", "6", "5", "4", "3", "2"],
-
-	[{Num, Suite} || Num <- Nums, Suite <- Suites].
-
-show_deck() ->
-  lists:foreach(fun(Item) -> io:format("~p~n", [Item]) end, make_deck()).
-
-shuffle(List) -> shuffle(List, []).
-shuffle([], Acc) -> Acc;
-
-%% Split the list at a random point into Leading (the start of the list)
-%% an entry in the middle of the list, and the remainder.
-%% Add the middle entry to the accumulator and re-call the function
-%% with the remainder of the list (which is concatenated).
-=======
 -compile(export_all).
 
 start() ->
@@ -31,12 +11,17 @@ start() ->
 
 	io:format("Calling dealer~n"),
 	Dealer ! {start, Players, Dealer, Deck},
-	io:format("End of start~n"). 
+
+	receive
+		_ ->
+			io:format("End!")
+		
+	end.
 
 create_players() ->
-	Player1 = spawn(cards, player, [[self], []]),
+	Player1 = spawn(cards, player, [[]]),
 	io:format("Spawned player at ~p~n", [Player1]),
-	Player2 = spawn(cards, player, [self, []]),
+	Player2 = spawn(cards, player, [[]]),
 	io:format("Spawned player at ~p~n", [Player2]),
 	{Player1, Player2}.
 
@@ -46,16 +31,16 @@ create_dealer() ->
 
 
 
-player(Self, Deck) ->
+player(Deck) ->
 	receive
-		{deck, Self, InitialDeck} ->
-			io:format("Cards received by ~p~n", [Self]),
-			player(Self, InitialDeck);
+		{deck, InitialDeck} ->
+			io:format("Cards received by ~p~n", [self()]),
+			player(InitialDeck);
 		{one_card, Dealer} ->
-			io:format("Request for one hand received at ~p~n", [Self]),
+			io:format("Request for one hand received at ~p~n", [self()]),
 			[Card | NewDeck] = Deck,
-			Dealer ! {one_card, Self, Card},
-			player(Self, NewDeck);
+			Dealer ! {one_card, self(), Card},
+			player(NewDeck);
 		_ -> 
 			io:format("Unknown message.")
 	end.
@@ -78,22 +63,26 @@ send_hand_order(Player1, Player2, Dealer) ->
 	Player1 ! {one_card, Dealer}.
 
 send_cards(Player1, Player2, {CardsA, CardsB}) ->
-	Player1 ! {deck, Player1, CardsA},
-	Player2 ! {deck, Player2, CardsB},
+	Player1 ! {deck, CardsA},
+	Player2 ! {deck, CardsB},
 	io:format("Cards sent to players~n").
 
-
 make_deck() ->
-  [{Value, Suit} || Value <- ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"],
-    Suit <- ["Clubs", "Diamonds", "Hearts", "Spades"]].
+	Suites = ["Clubs", "Diamonds", "Hearts", "Spades"],
+	Nums = ["A", "K", "Q", "J" , "10", "9", "8", "7", "6", "5", "4", "3", "2"],
 
-show_deck(Deck) ->
-  lists:foreach(fun(Item) -> io:format("~p~n", [Item]) end, Deck).
+	[{Num, Suite} || Num <- Nums, Suite <- Suites].
 
+show_deck() ->
+  lists:foreach(fun(Item) -> io:format("~p~n", [Item]) end, make_deck()).
 
 shuffle(List) -> shuffle(List, []).
 shuffle([], Acc) -> Acc;
->>>>>>> 9969bb7406aceffb5fa2303b20003d45a12a23e5
+
+%% Split the list at a random point into Leading (the start of the list)
+%% an entry in the middle of the list, and the remainder.
+%% Add the middle entry to the accumulator and re-call the function
+%% with the remainder of the list (which is concatenated).
 shuffle(List, Acc) ->
   {Leading, [H | T]} = lists:split(random:uniform(length(List)) - 1, List),
   shuffle(Leading ++ T, [H | Acc]).
