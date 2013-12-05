@@ -8,7 +8,7 @@ people() ->
 
 comp_example() ->
 	People = people(),
-	[Name || {Name, _, Age} <- People, Age > 40].
+	[Name || {Name, Sex, Age} <- People, Age > 40].
 
 comp_example_two() ->
 	People = people(),
